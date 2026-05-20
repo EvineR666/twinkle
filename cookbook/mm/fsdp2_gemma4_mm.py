@@ -92,10 +92,10 @@ def train():
         vision_config = config.vision_config
         if TEXT_NUM_LAYERS is not None and hasattr(text_config, 'num_hidden_layers'):
             text_config.num_hidden_layers = TEXT_NUM_LAYERS
-            print(f" modify > text_config.num_hidden_layers = {text_config.num_hidden_layers}")
+            logger.info(f" modify > text_config.num_hidden_layers = {text_config.num_hidden_layers}")
         if VISION_NUM_LAYERS is not None and hasattr(vision_config, 'num_hidden_layers'):
             vision_config.num_hidden_layers = VISION_NUM_LAYERS
-            print(f" modify > vision_config.num_hidden_layers = {vision_config.num_hidden_layers}")
+            logger.info(f" modify > vision_config.num_hidden_layers = {vision_config.num_hidden_layers}")
     if hasattr(config, 'use_cache'):
         config.use_cache = False
 
@@ -136,7 +136,7 @@ def train():
     # Print the training config
     logger.info(model.get_train_configs())
     logger.info(f'Total steps: {len(dataloader)}')
-    best_eval_loss = 99.0
+    best_eval_loss = float('inf')
     # lora: 8G * 8
     # full: 18G * 8
 
@@ -145,10 +145,10 @@ def train():
     eval_dataset = Dataset(dataset_meta=DatasetMeta(DATASET_PATH, data_slice=range(EVAL_LENGTH)))
     eval_dataset.set_template('Gemma4Template', model_id=MODEL_PATH)
     # eval_dataset.map(preprocess_func=SelfCognitionProcessor('twinkle大模型', 'ModelScope社区'))
-    dataset.map(preprocess_func=LatexOCRProcessor)
+    eval_dataset.map(preprocess_func=LatexOCRProcessor)
     eval_dataset.encode()
     eval_dataloader = DataLoader(dataset=eval_dataset, batch_size=8)
-    for step, batch in enumerate(dataloader):
+    for step, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
         # Do forward and backward
         model.forward_backward(inputs=batch)
         # Step

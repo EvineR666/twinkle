@@ -1,14 +1,8 @@
-import json
-import torch
-import torch.nn.functional as F
-from typing import Any, Dict, List, Literal, Optional, Set, Tuple, Type, Union
-from dataclasses import dataclass, field, fields
-from PIL import Image
-from copy import deepcopy
 
-from twinkle import remote_class, requires
+from typing import List
+from twinkle import remote_class
 from twinkle.template import Template
-from twinkle.data_format import InputFeature, Message, Trajectory
+from twinkle.data_format import Trajectory
 
 @remote_class()
 class Gemma4Template(Template):
@@ -41,3 +35,5 @@ class Gemma4Template(Template):
             for message in trajectory['messages']:
                 message['content'] = message['content'][0]['text']
         return [trajectory]
+    
+    
