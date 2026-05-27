@@ -49,6 +49,7 @@ class InputProcessor:
         'pixel_values_videos',
         'video_grid_thw',
         'input_features',
+        'input_features_mask',
         'feature_attention_mask',
         'grid_thws',
     }
@@ -592,10 +593,15 @@ class InputProcessor:
         for field, values in vlm_fields.items():
             if values:
                 _values = []
-                for value in values:
+                for i, value in enumerate(values):
                     if value.dim() == 1:
-                        # image_thw may be squeezed
-                        value = value.unsqueeze(0)
+                        if field == 'input_features_mask':
+                            input_features_shape = vlm_fields['input_features'][i].shape
+                            assert value.shape[0] == input_features_shape[0]
+                            value = value.unsqueeze(1).expand(input_features_shape)
+                        else:
+                            # image_thw may be squeezed
+                            value = value.unsqueeze(0)
                     _values.append(value)
                 result[field] = _values
         return result
