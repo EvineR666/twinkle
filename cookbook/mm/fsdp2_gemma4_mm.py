@@ -69,7 +69,7 @@ def train():
     ### prepare dataset and dataloader
     dataset = Dataset(dataset_meta=DatasetMeta(DATASET_PATH, data_slice=range(TRAIN_LEN)))
     # Set template to prepare encoding
-    dataset.set_template('Gemma4Template', model_id=MODEL_PATH)
+    dataset.set_template('Template', model_id=MODEL_PATH)
     # Preprocess the dataset to standard format
     # dataset.map(preprocess_func=SelfCognitionProcessor('twinkle大模型', 'ModelScope社区'))
     dataset.map(preprocess_func=LatexOCRProcessor)
@@ -115,10 +115,6 @@ def train():
             }
         },
     )
-    # 若未传入config, 则自动通过 AutoConfig.from_pretrained 读取config
-
-    # model.model._no_split_modules = {'Gemma4VisionEncoderLayer', 'Gemma4TextDecoderLayer', 'Gemma4AudioLayer'}    # for 3 modalities(2B、4B)
-    # model.model._no_split_modules = {'Gemma4VisionEncoderLayer', 'Gemma4TextDecoderLayer'}    # for 2 modalities(26B-A4B、31B)
 
     lora_config = LoraConfig(r=8, lora_alpha=32, target_modules='all-linear')
 
@@ -143,7 +139,7 @@ def train():
     ### eval dataset and dataloader
     EVAL_LENGTH = 100
     eval_dataset = Dataset(dataset_meta=DatasetMeta(DATASET_PATH, data_slice=range(EVAL_LENGTH)))
-    eval_dataset.set_template('Gemma4Template', model_id=MODEL_PATH)
+    eval_dataset.set_template('Template', model_id=MODEL_PATH)
     # eval_dataset.map(preprocess_func=SelfCognitionProcessor('twinkle大模型', 'ModelScope社区'))
     eval_dataset.map(preprocess_func=LatexOCRProcessor)
     eval_dataset.encode()
