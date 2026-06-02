@@ -76,7 +76,7 @@ def train():
     # Encode dataset
     dataset.encode()
     dataloader = DataLoader(dataset=dataset, batch_size=BATCH_SIZE)
-    
+
     config, kwargs = AutoConfig.from_pretrained(
         MODEL_PATH,
         trust_remote_code=True,
@@ -92,10 +92,10 @@ def train():
         vision_config = config.vision_config
         if TEXT_NUM_LAYERS is not None and hasattr(text_config, 'num_hidden_layers'):
             text_config.num_hidden_layers = TEXT_NUM_LAYERS
-            logger.info(f" modify > text_config.num_hidden_layers = {text_config.num_hidden_layers}")
+            logger.info(f' modify > text_config.num_hidden_layers = {text_config.num_hidden_layers}')
         if VISION_NUM_LAYERS is not None and hasattr(vision_config, 'num_hidden_layers'):
             vision_config.num_hidden_layers = VISION_NUM_LAYERS
-            logger.info(f" modify > vision_config.num_hidden_layers = {vision_config.num_hidden_layers}")
+            logger.info(f' modify > vision_config.num_hidden_layers = {vision_config.num_hidden_layers}')
     if hasattr(config, 'use_cache'):
         config.use_cache = False
 
@@ -104,7 +104,7 @@ def train():
         model_id=MODEL_PATH,
         config=config,
         device_mesh=device_mesh,
-        strategy="accelerate", # native_fsdp、 accelerate
+        strategy='accelerate', # native_fsdp、 accelerate
         ignore_mismatched_sizes=IGNORE_MISMATCHED_SIZES,
         fsdp_config={
             'reshard_after_forward': True,
@@ -163,10 +163,9 @@ def train():
                 best_eval_loss = float(metrics['loss'])
             metrics['best_eval_loss'] = best_eval_loss
             logger.info(f'Current is step {step} of {len(dataloader)}, Eval metric: {metrics}')
-            
+
     # model.save(f'last-checkpoint')
 
 
 if __name__ == '__main__':
     train()
-

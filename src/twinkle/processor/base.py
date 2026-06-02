@@ -594,7 +594,7 @@ class InputProcessor:
             if values:
                 _values = []
                 for i, value in enumerate(values):
-                    if field == 'input_features':   # [freq_bins, time_steps] -> [freq_bins, time_steps, num_features]
+                    if field == 'input_features':  # [freq_bins, time_steps] -> [freq_bins, time_steps, num_features]
                         assert len(value.shape) == 2
                         value = value.unsqueeze(-1)
                     if field == 'input_features_mask':  # [freq_bins,] -> [freq_bins, time_steps]

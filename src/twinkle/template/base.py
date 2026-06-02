@@ -56,17 +56,17 @@ class Template:
         self.truncation_strategy = truncation_strategy
         self.default_system = default_system
         self._test_support_assistant_tokens_mask()
-        
+
         self.pre_pipeline_names: List[str] = [
-            "_add_default_system",
-            "_to_standard_reasoning_content",
-            "_build_standard_messages",
+            '_add_default_system',
+            '_to_standard_reasoning_content',
+            '_build_standard_messages',
         ]
-        
+
         self.post_pipeline_names: List[str] = [
-            "_check_max_length",
-            "_add_attention_fields",
-            "_roll_labels",
+            '_check_max_length',
+            '_add_attention_fields',
+            '_roll_labels',
         ]
 
     def parse_tool_call(self, decoded: str) -> List[Dict[str, Any]]:
@@ -472,18 +472,12 @@ class Template:
 
     def _build_standard_messages(self, trajectory: Trajectory) -> List[Trajectory]:
         # Extract trajectory-level media
-        extracted_images = trajectory.pop('images', None) or [
-            img for msg in trajectory['messages']
-            for img in msg.get('images', []) or []
-        ]
-        extracted_videos = trajectory.pop('videos', None) or [
-            video for msg in trajectory['messages']
-            for video in msg.get('videos', []) or []
-        ]
-        extracted_audios = trajectory.pop('audios', None) or [
-            audio for msg in trajectory['messages']
-            for audio in msg.get('audios', []) or []
-        ]
+        extracted_images = trajectory.pop(
+            'images', None) or [img for msg in trajectory['messages'] for img in msg.get('images', []) or []]
+        extracted_videos = trajectory.pop(
+            'videos', None) or [video for msg in trajectory['messages'] for video in msg.get('videos', []) or []]
+        extracted_audios = trajectory.pop(
+            'audios', None) or [audio for msg in trajectory['messages'] for audio in msg.get('audios', []) or []]
         images = self.preprocess_images(extracted_images)
         videos = self.preprocess_videos(extracted_videos)
         audios = self.preprocess_audios(extracted_audios)
