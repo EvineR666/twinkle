@@ -166,7 +166,7 @@ def train():
             logger.info(f'Current is step {step} of {len(dataloader)}, Train metric: {metric}')
 
         if step % SAVE_STEP == 0:
-            metrics = eval(model, eval_dataloader)
+            metrics = evaluate(model, eval_dataloader)
             metrics['step'] = step
             if float(metrics['loss']) < best_eval_loss:
                 # model.save(f'checkpoint-{step}')
