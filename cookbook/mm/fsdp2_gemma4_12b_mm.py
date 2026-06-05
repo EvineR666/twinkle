@@ -56,7 +56,7 @@ class LatexOCRProcessor(Preprocessor):
             ]
         )
 
-def eval(model, eval_dataloader):
+def evaluate(model, eval_dataloader):
     for step, batch in tqdm(enumerate(eval_dataloader)):
         model.forward_only(inputs=batch)
         model.calculate_loss()
